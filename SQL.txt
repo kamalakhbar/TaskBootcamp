@@ -1,0 +1,113 @@
+1. Tampilkan fullname, jabatan, usia, dan jumlah anak dari masing-masing karyawan saat ini
+
+
+select concat(first_name,' ',last_name) as [Full Name] , 
+		p.name as Jabatan, datediff(year, dob ,CURRENT_TIMESTAMP) as Usia, count(f.biodata_id) as [Jumlah Anak]
+from biodata b join employee e on b.id = e.biodata_id
+			   join employee_position ep on e.id = ep.employee_id
+			   join position p on ep.position_id = p.id
+			   join family f on b.id = f.biodata_id
+where f.status = 'Anak'
+group by concat(first_name,' ',last_name), p.name, datediff(year, dob ,CURRENT_TIMESTAMP)
+
+============================================================================================================================
+
+2. Hitung berapa hari cuti yang sudah diambil masing-masing karyawan
+
+select concat(first_name,' ',last_name) as [Full Name], sum(datediff(DAY, lr.start_date, lr.end_date)) as [Jumlah Hari]
+from biodata b join employee e on b.id = e.biodata_id
+				join leave_request lr on lr.employee_id = e.id
+group by concat(first_name,' ',last_name)
+
+============================================================================================================================
+
+3. Tampilkan fullname dan jabatan 3 karyawan paling tua
+
+select Top 1 concat(first_name,' ',last_name) as [Full Name] , p.name as Jabatan, datediff(year, dob ,CURRENT_TIMESTAMP) as Usia
+from biodata b join employee e on b.id = e.biodata_id
+				join employee_position ep on ep.employee_id = e.id
+				join position p on p.id = ep.position_id
+order by Usia DESC
+
+
+============================================================================================================================
+
+4. Tampilkan nama-nama pelamar yang tidak diterima sebagai karyawan
+
+select concat(first_name,' ',last_name) as [Full Name] from biodata where (id not in 
+	(select biodata_id from employee)
+)
+
+============================================================================================================================
+
+5. Hitung berapa rata-rata gaji karyawan dengan level staff
+
+select avg(e.salary) as [Average Staff]
+from biodata b join employee e on b.id = e.biodata_id
+				join employee_position ep on ep.employee_id = e.id
+				join position p on p.id = ep.position_id
+where p.name = 'Staff'
+
+
+============================================================================================================================
+
+6. Tampilkan nama karyawan, jenis perjalanan dinas, tanggal perjalanan dinas, dan total pengeluarannya selama perjalanan dinas tersebut
+
+select concat(first_name,' ',last_name) as [Full Name], tt.name, tr.start_date, tr.end_date, sum(ts.item_cost) as [Total Biaya]
+from biodata b join employee e on b.id = e.biodata_id
+				join travel_request tr on tr.employee_id = e.id
+				join travel_type tt on tr.travel_type_id = tt.id
+				join travel_settlement ts on ts.travel_request_id = tr.id 
+group by concat(first_name,' ',last_name), tt.name, tr.start_date, tr.end_date
+
+
+============================================================================================================================
+
+7. Tampilkan sisa cuti tahun 2020 yang dimiliki oleh karyawan
+
+select concat(first_name,' ',last_name) as [Full Name], el.regular_quota - sum(datediff(DAY, lr.start_date, lr.end_date)) as [Jumlah Hari]
+from biodata b join employee e on b.id = e.biodata_id
+				join leave_request lr on lr.employee_id = e.id
+				join employee_leave el on el.employee_id = e.id
+where el.period = '2020'
+group by concat(first_name,' ',last_name), el.regular_quota
+
+
+============================================================================================================================
+
+8. Hitung berapa rata-rata gaji karyawan dengan level managerial (non staff)
+
+select avg(e.salary) as [Average Staff]
+from biodata b join employee e on b.id = e.biodata_id
+				join employee_position ep on ep.employee_id = e.id
+				join position p on p.id = ep.position_id
+where p.name != 'Staff'
+
+============================================================================================================================
+
+9. Hitung ada berapa karyawan yang sudah menikah dan yang tidak menikah (tabel: menikah x orang, tidak menikah x orang)
+
+select sum(case when marital_status = 0 then 1 else 0 end) AS [belum menikah], 
+	sum(case when marital_status = 1 then 1 else 0 end) AS [sudah menikah]
+from biodata
+
+============================================================================================================================
+
+
+10. Jika digabungkan antara cuti dan perjalanan dinas, berapa hari Raya tidak berada di kantor pada tahun 2020?
+
+
+
+select employee_id, sum(DATEDIFF(DAY, start_date, end_date)) as Hari
+from travel_request
+group by employee_id
+Union
+select employee_id, sum(DATEDIFF(DAY, start_date, end_date))
+from leave_request
+group by employee_id
+order by employee_id 
+
+
+
+
+

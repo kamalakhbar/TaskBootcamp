@@ -1,0 +1,162 @@
+   ============================================= [1. Diagonal Sum] =======================================================
+	int sum1 = 0;
+        int sum2 = 0;
+        var x = 0;
+        int a = arr.Count()-1;
+        for(int i = 0; i < arr.Count; i++,a--){
+            for(int j = 0; j < arr.Count; j++){
+                if(j == i){
+                    sum1 += arr[i][j];
+                }
+                if(j == a){
+                    sum2 += arr[i][j];
+                }
+            }
+        }
+        x = sum1 - sum2;
+        return  Math.Abs(x);
+
+============================================== [2. Jim Loncat] =======================================================
+[Via Detectsi jalur]
+	// pola1 = {"-","-","-","o",","-","o","-"}
+	// pola2 = {"-","-","-","-","-","o","-","-","-","-","o","-","-","-","-","o","-"}
+        string[] jalan = new string[]{"w","w","w","j","j"};
+        int hasil = 0;
+        for(int i = 0; i < jalur.Length-1; i++){
+            if(jalur[i] == "-") hasil++;
+            else if(jalur[i] == "o") {
+                hasil = hasil -2;
+                i++;
+            }
+            
+        }
+        if(hasil <= 0) Console.WriteLine("mati dijalan");
+        else Console.WriteLine(hasil);
+
+[Via Deteksi Cara Jalan]
+
+	// jalan1 = {"w","w","w","j","j"}
+        // jalan2 = {"w","w","w","w","w","j","w","w","w","j","w","w","w","j"}
+        // jalan3 = {"w","w","w","w","w","j","j","w","j","w","w","w","j"}
+        // jalan4 = {"w","w","j","w","w","j"}
+        // jalan5 = {"w","w","w","w","j","w","w","j","w","j"}
+        string[] jalan = new string[]{"w","w","w","j","j"};
+        int count = 0;
+        for(int i = 0; i < jalan.Length; i++){
+            if(jalan[i] == "w") count++;
+            else if(jalan[i] == "j") count = count - 2;
+        }
+        if(count <= 0) Console.WriteLine("mati");
+        else Console.WriteLine(count);
+============================================== [3. Buah] =========================================================
+
+	string text = "apel:10,semangka:5,apel:3,apel:10,semangka:5,apel:3.";
+        char[] cutter = {':' , ',' , '.'};
+        string[] hasil = text.Split(cutter);
+        int jumlahApel = 0;
+        int jumlahSemangka = 0;
+        for(int i = 0; i < hasil.Length;i=i+2){
+            if(hasil[i] == "apel"){
+                jumlahApel += Int32.Parse(hasil[i+1]);
+            }else if(hasil[i] == "semangka"){
+                jumlahSemangka += Int32.Parse(hasil[i+1]);
+            }
+        }
+        Console.WriteLine($"jumlah apel {jumlahApel}, jumlah semangka {jumlahSemangka}");
+
+============================================== [4. Kertas ] =========================================================
+
+	char[] kertas = Console.ReadLine().ToCharArray();
+        char hasil = kertas[1]; 
+        int exe = (int)Char.GetNumericValue(hasil);
+        Console.WriteLine("jumlah kertas yang di butuhkan untuk membuat A"+ 
+                 exe + " adalah " + Math.Pow(2,(6-exe)));
+
+=============================================== [5. Dictionary and Hashmaps] =========================================
+
+static List<int> freqQuery(List<List<int>> queries) {
+        List<int> hasil = new List<int>();
+        int count = 0;
+        for(int i = 0; i < queries.Count ; i++){
+            if(queries[i][0] == 3){
+                count++;
+                if(count == 1){
+                            hasil.Add(0);
+                }
+                for(int j = 0; j <= i; j++){
+                    if(queries[j][1] % 2 == 0){
+                        if(hasil.Count < count){
+                         hasil.Add(1);
+                        }
+                    }
+                }
+            }
+        }
+        return hasil;
+
+    }
+
+================================================= [6. Anagram] ========================================================
+
+// terlalu memakan waktu saat running
+
+public static int sherlockAndAnagrams(string s)
+    {
+        // string s = ("ifailuhkqq"); //visualcode
+        string X, Y;
+        int pecah = 1;
+        int stop = 0;
+        int count = 0;
+        for (int i = 0; i < s.Length - pecah; i++)
+        {
+            for (int j = i+1; j < s.Length - stop; j++)
+            {
+                char[] A = s.Substring(i, pecah).ToCharArray();
+                char[] B = s.Substring(j, pecah).ToCharArray();
+                Array.Sort(A);
+                Array.Sort(B);
+                X = new string(A);
+                Y = new string(B);
+                if(X == Y) count++;
+            }
+            if(i == s.Length - pecah - 1)
+            {
+                i = -1;
+                pecah++;
+                stop++;
+            }
+        }
+        return count;
+    }
+
+================================================== [7. Filter Konsonan Vokal] ===================================================
+
+List<char> vokal = new List<char>();
+List<char> konsonan = new List<char>();
+String input = Console.ReadLine().ToLower().Replace(" ","");
+//String trimInput = String.Concat(input.Where(c => !Char.IsWhiteSpace(c))).ToLower();
+char[] pecahan = input.ToCharArray();
+Array.Sort(pecahan);
+for(int i = 0; i < pecahan.Length; i++)
+{
+    if(pecahan[i] == 'a' || pecahan[i] == 'i' || pecahan[i] == 'u' || pecahan[i] == 'e' || pecahan[i] == 'o')
+    {
+        vokal.Add(pecahan[i]);
+    }else konsonan.Add(pecahan[i]);
+}
+Console.Write("Huruf Vokal = ");
+foreach(char item in vokal)
+{
+    Console.Write(item);
+}
+Console.Write("\nHuruf Vokal = ");
+foreach(char item in konsonan)
+{
+    Console.Write(item);
+}
+
+
+
+
+
+
